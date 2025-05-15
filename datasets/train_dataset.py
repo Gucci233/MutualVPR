@@ -157,7 +157,10 @@ class TrainDataset(torch.utils.data.Dataset):
         # images_paths = images_paths[:int(len_images*0.15)]
         # ***********************************************
         
-        images_paths += dataset_utils.read_images_paths('/home/cvpr/225nas/EigenPlaces/crops_30_1')
+
+        # if using cropping strategy
+        # images_paths += dataset_utils.read_images_paths('/your/path/crops', get_abs_path=True)
+        
         # ***********************************************
         logging.debug(f"Found {len(images_paths)} images")
         

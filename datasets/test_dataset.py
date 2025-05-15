@@ -16,36 +16,36 @@ class TestDataset(data.Dataset):
         self.database_folder = dataset_folder + "/" + database_folder
         self.queries_folder = dataset_folder + "/" + queries_folder
         self.queries_paths = dataset_utils.read_images_paths(self.queries_folder, get_abs_path=True)
-        # self.database_paths = dataset_utils.read_images_paths(self.database_folder, get_abs_path=True)
+        self.database_paths = dataset_utils.read_images_paths(self.database_folder, get_abs_path=True)
         
-        # self.dataset_name = os.path.basename(dataset_folder)
+        self.dataset_name = os.path.basename(dataset_folder)
         
-        # #### Read paths and UTM coordinates for all images.
-        # # The format must be path/to/file/@utm_easting@utm_northing@...@.jpg
-        # self.database_utms = np.array([(path.split("@")[1], path.split("@")[2]) for path in self.database_paths]).astype(float)
-        # self.queries_utms = np.array([(path.split("@")[1], path.split("@")[2]) for path in self.queries_paths]).astype(float)
+        #### Read paths and UTM coordinates for all images.
+        # The format must be path/to/file/@utm_easting@utm_northing@...@.jpg
+        self.database_utms = np.array([(path.split("@")[1], path.split("@")[2]) for path in self.database_paths]).astype(float)
+        self.queries_utms = np.array([(path.split("@")[1], path.split("@")[2]) for path in self.queries_paths]).astype(float)
         
-        # # Find positives_per_query, which are within positive_dist_threshold (default 25 meters)
-        # knn = NearestNeighbors(n_jobs=-1)
-        # knn.fit(self.database_utms)
-        # self.positives_per_query = knn.radius_neighbors(
-        #     self.queries_utms, radius=positive_dist_threshold, return_distance=False
-        # )
+        # Find positives_per_query, which are within positive_dist_threshold (default 25 meters)
+        knn = NearestNeighbors(n_jobs=-1)
+        knn.fit(self.database_utms)
+        self.positives_per_query = knn.radius_neighbors(
+            self.queries_utms, radius=positive_dist_threshold, return_distance=False
+        )
         
-        # self.images_paths = self.database_paths + self.queries_paths
+        self.images_paths = self.database_paths + self.queries_paths
         
-        # self.database_num = len(self.database_paths)
-        # self.queries_num = len(self.queries_paths)
+        self.database_num = len(self.database_paths)
+        self.queries_num = len(self.queries_paths)
 
-        # transforms_list = []
-        # if resize_test_imgs:
-        #     # Resize to image_size along the shorter side while maintaining aspect ratio
-        #     transforms_list += [transforms.Resize((image_size,image_size), antialias=True)]
-        # transforms_list += [
-        #         transforms.ToTensor(),
-        #         transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
-        #     ]
-        # self.base_transform = transforms.Compose(transforms_list)
+        transforms_list = []
+        if resize_test_imgs:
+            # Resize to image_size along the shorter side while maintaining aspect ratio
+            transforms_list += [transforms.Resize((image_size,image_size), antialias=True)]
+        transforms_list += [
+                transforms.ToTensor(),
+                transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
+            ]
+        self.base_transform = transforms.Compose(transforms_list)
     
     @staticmethod
     def open_image(path):
