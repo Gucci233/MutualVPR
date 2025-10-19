@@ -24,7 +24,7 @@ print(f"There are {torch.cuda.device_count()} GPUs")
 
 
 def test(args: Namespace, eval_ds: Dataset, model: torch.nn.Module,
-         num_preds_to_save: int = 0) -> Tuple[np.ndarray, str]:
+        ) -> Tuple[np.ndarray, str]:
     """Compute descriptors of the given dataset and compute the recalls."""
     
     model = model.eval()

@@ -18,7 +18,7 @@ def parse_arguments(is_training: bool = True):
     parser.add_argument("--train_all_layers", default=False, action="store_true",
                         help="If true, train all layers of the backbone")
     # Training parameters
-    parser.add_argument("--use_amp16", action="store_true",
+    parser.add_argument("--use_amp", default=True, action="store_true",
                         help="use Automatic Mixed Precision")
     parser.add_argument("--augmentation_device", type=str, default="cuda",
                         choices=["cuda", "cpu"],

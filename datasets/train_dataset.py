@@ -245,4 +245,26 @@ class TrainDataset(torch.utils.data.Dataset):
 
     
 
+class ImageKeyDataset(torch.utils.data.Dataset):
+    def __init__(self, keys, group, transform):
+        self.keys = keys
+        self.group = group
+        self.transform = transform
 
+    def __len__(self):
+        return len(self.keys)
+
+    def __getitem__(self, idx):
+        key = self.keys[idx]
+        images_path = self.group.image_dict[key]
+
+        images_tensor = torch.empty(len(images_path), 3, 504, 504)
+        for i, path in enumerate(images_path):
+            pil_image = TrainDataset.open_image(path)
+            images_tensor[i] = self.transform(pil_image)
+
+        return key, images_tensor 
+    
+def custom_collate_fn(batch):
+    keys, images = zip(*batch) 
+    return list(keys), torch.stack(images) 

@@ -1,4 +1,4 @@
-# MutualVPR
+# MutualVPR: A Mutual Learning Framework for Resolving Supervision Inconsistencies via Adaptive Clustering
 
 ## 1. Environment Setup
 
