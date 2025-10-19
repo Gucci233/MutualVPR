@@ -78,7 +78,7 @@ model_optimizer = torch.optim.Adam(model.parameters(), lr=args.lr)
 scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(model_optimizer, T_max=50)
 
 #### Datasets
-groups = [TrainDataset(args, '/data/gqw/sfxl/processed', M=args.M, N=args.N, C=args.C,
+groups = [TrainDataset(args, args.train_set_folder, M=args.M, N=args.N, C=args.C,
                        current_group=n, min_images_per_class=args.min_images_per_class) for n in range(args.groups_num)]
 # Each group has its own classifier, which depends on the number of classes in the group
 classifiers = [cosface_loss.MarginCosineProduct(args.fc_output_dim, len(group)) for group in groups]
@@ -89,9 +89,9 @@ logging.info(f"Using {len(groups)} groups")
 logging.info(f"The {len(groups)} groups have respectively the following number of classes {[len(g) for g in groups]}")
 logging.info(f"The {len(groups)} groups have respectively the following number of images {[g.get_images_num() for g in groups]}")
 
-val_ds = TestDataset('/data/gqw/sfxl/processed/val', positive_dist_threshold=args.positive_dist_threshold,
+val_ds = TestDataset(args.val_set_folder, positive_dist_threshold=args.positive_dist_threshold,
                      image_size=args.image_size, resize_test_imgs=args.resize_test_imgs)
-test_ds = TestDataset('/data/gqw/sfxl/processed/test', queries_folder="queries_v1",
+test_ds = TestDataset(args.test_set_folder, queries_folder="queries_v1",
                       positive_dist_threshold=args.positive_dist_threshold,
                       image_size=args.image_size, resize_test_imgs=args.resize_test_imgs)
 logging.info(f"Validation set: {val_ds}")
@@ -114,7 +114,6 @@ logging.info(f"There are {len(groups[0])} classes for the first group, " +
              f"with batch_size {args.batch_size}, therefore the model sees each class (on average) " +
              f"{args.iterations_per_epoch * args.batch_size / len(groups[0]):.1f} times per epoch")
 
-# thread_pool = concurrent.futures.ThreadPoolExecutor(max_workers=args.batch_size)
 
 if args.augmentation_device == "cuda":
     gpu_augmentation = T.Compose([
@@ -163,7 +162,7 @@ for epoch_num in range(start_epoch_num, args.epochs_num):
         keys, images = zip(*batch) 
         return list(keys), torch.stack(images) 
     
-    dataset = ImageKeyDataset(samples)
+    dataset = ImageKeyDataset(samples,groups[current_group_num],test_transform)
     loader = DataLoader(dataset, batch_size=1, num_workers=8, collate_fn=custom_collate_fn,shuffle=False)
 
     for item in tqdm(loader):

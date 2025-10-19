@@ -153,14 +153,12 @@ class TrainDataset(torch.utils.data.Dataset):
         logging.debug(f"Searching training images in {dataset_folder}")
         
         images_paths = dataset_utils.read_images_paths(dataset_folder, get_abs_path=True)
-        # len_images = len(images_paths)
-        # images_paths = images_paths[:int(len_images*0.15)]
+
         # ***********************************************
         
-
         # if using cropping strategy
         # images_paths += dataset_utils.read_images_paths('/your/path/crops', get_abs_path=True)
-        
+
         # ***********************************************
         logging.debug(f"Found {len(images_paths)} images")
         
