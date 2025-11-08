@@ -30,6 +30,7 @@ To apply a multi-view cropping strategy, utility functions are provided in `data
 After preparing the data, modify the initialize() function in train_dataset.py to include the newly cropped data.
 
 
+
 ## Training
 
 Before training, make sure to modify the dataset paths in the code to match your local setup.
@@ -44,7 +45,14 @@ python train.py
 ```
 
 
----
+
+## 🔗 Model Weights
+
+Our pretrained weight file can be downloaded from the following link:
+
+👉 [Download from Google Drive](https://drive.google.com/file/d/1fn67GO6sA3qIIIgOuM9VjmTHoEkkyopF/view?usp=drive_link)
+
+
 
 ## Testing
 
